@@ -1,0 +1,26 @@
+.Container {
+  flex: 1;
+  max-width: 300px;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-sizing: border-box;
+  margin-right: 10px;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  @media only screen
+  and (min-device-width : 0px)
+  and (max-device-width : 480px) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 0;
+    margin: 0;
+    width: 300px;
+    max-width: unset;
+    height: 100%;
+  }
+}

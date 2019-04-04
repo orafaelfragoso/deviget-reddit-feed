@@ -1,0 +1,14 @@
+.Container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #FD4715;
+
+  @media only screen
+  and (min-device-width : 0px)
+  and (max-device-width : 480px) {
+    padding: 0;
+  }
+}
