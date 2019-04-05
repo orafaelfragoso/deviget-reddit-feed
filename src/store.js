@@ -1,14 +1,22 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { loadState, saveState } from './services/localStorage'
+import ReduxThunk from 'redux-thunk'
+import throttle from 'lodash/throttle'
+import postsReducer from './reducers/posts.reducer'
 
-function counter(state = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
-    default:
-      return state
-  }
-}
+const persistedState = loadState()
+const combinedReducers = combineReducers({
+  posts: postsReducer
+})
 
-export default createStore(counter)
+const store = createStore(
+  combinedReducers,
+  persistedState,
+  applyMiddleware(ReduxThunk)
+)
+
+store.subscribe(throttle(() => {
+  saveState(store.getState())
+}, 1000))
+
+export default store

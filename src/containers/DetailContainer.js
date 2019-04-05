@@ -6,7 +6,7 @@ class DetailContainer extends Component {
   render() {
     return (
       <div className={styles.Container}>
-        <Header title="Details" showMenu={true} onMenuClick={() => console.log('hey')} />
+        <Header title="Details" showMenu={true} onMenuClick={this.props.onDrawerClick} />
       </div>
     );
   }
