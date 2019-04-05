@@ -9,3 +9,13 @@
   display: flex;
   flex-direction: column;
 }
+
+.List {
+
+}
+
+.ListItem {
+  flex: 1;
+  background-color: #f1f1f1;
+  border-bottom: 1px solid #ccc;
+}
