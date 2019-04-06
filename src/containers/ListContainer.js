@@ -1,61 +1,43 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchPosts } from '../actions/posts.actions'
+import { fetchPosts, deletePost } from '../actions/posts.actions'
 import styles from './stylesheets/ListContainer.module.scss'
 import Header from '../components/Header'
-import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview/web'
+import List from '../components/List'
+import ListItem from '../components/ListItem'
 
 class ListContainer extends Component {
-  dataProvider = new DataProvider((r1, r2) => {
-    return r1.data !== r2.data;
-  })
 
-  layoutProvider = new LayoutProvider(() => {
-      return 'VSEL'
-    }, (type, dim, index) => {
-      switch(type) {
-        default:
-          dim.width = 300
-          dim.height = 100
-          break
-      }
-    }
-  )
-
-  componentDidMount() {
+  componentWillMount() {
     this.props.getPosts(true)
   }
 
-  renderItems(type, item) {
-    return (
-      <div className={styles.ListItem}>
-        <div className={styles.ListItemBody}>
-          <span className={styles.ListItemImage}>
-            <img src={item.data.thumbnail} alt={item.data.title} />
-          </span>
-          <div className={styles.ListItemDetail}>
-            <span className={styles.ListItemTitle}>{item.data.author}</span>
-            <span className={styles.ListItemText}>{item.data.title}</span>
-          </div>
-        </div>
-        <div className={styles.ListItemBottom}>
-          <span className={styles.ListItemDismiss}>Dismiss</span>
-          <span className={styles.ListItemComments}>{item.data.num_comments} comments</span>
-        </div>
-      </div>
-    )
+  renderItems() {
+    return this.props.posts.map(item => {
+      return (
+        <ListItem
+          image={item.data.thumbnail}
+          title={item.data.author}
+          description={item.data.title}
+          comments={item.data.num_comments}
+          id={item.data.id}
+          key={item.data.id}
+          delayTime={200}
+          isMounted={true}
+          onClick={() => {}}
+          onDismiss={this.props.deletePost}
+        />
+      )
+    })
   }
 
   render() {
     return (
       <div className={styles.Container}>
         <Header title="Reddit Feed" />
-        <RecyclerListView
-          dataProvider={this.dataProvider.cloneWithRows(this.props.posts)}
-          layoutProvider={this.layoutProvider}
-          rowRenderer={this.renderItems.bind(this)}
-          className={styles.List}
-        />
+        <List>
+          {this.renderItems()}
+        </List>
       </div>
     );
   }
@@ -66,7 +48,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  getPosts: fetchPosts
+  getPosts: fetchPosts,
+  deletePost: deletePost
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListContainer)

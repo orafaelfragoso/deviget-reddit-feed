@@ -1,26 +1,20 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import styles from './stylesheets/AppContainer.module.scss'
-import Drawer from '@material-ui/core/Drawer'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ListContainer from './ListContainer'
 import DetailContainer from './DetailContainer'
+import { openDrawer, closeDrawer } from '../actions/drawer.actions'
+import { toggleMobile } from '../actions/mobile.actions'
 
 class AppContainer extends Component {
-  state = {
-    openDrawer: false,
-    isMobile: false
-  }
-
-  handleDrawerToggle() {
-    this.setState({ openDrawer: !this.state.openDrawer })
-  }
-
   handleResize(e) {
     const width = window.innerWidth
 
     if (width > 767) {
-      this.setState({isMobile: false})
+      this.props.toggleMobile(false)
     } else {
-      this.setState({isMobile: true})
+      this.props.toggleMobile(true)
     }
   }
 
@@ -37,20 +31,32 @@ class AppContainer extends Component {
   render() {
     return (
       <div className={styles.Container}>
-        <Drawer 
-          variant={this.state.isMobile ? 'temporary' : 'permanent'}
+        <SwipeableDrawer 
+          variant={this.props.mobile ? 'temporary' : 'permanent'}
           className={styles.Drawer}
-          onClose={this.handleDrawerToggle.bind(this)}
+          onClose={this.props.closeDrawer}
+          onOpen={this.props.openDrawer}
           anchor="left"
-          open={this.state.isMobile ? this.state.openDrawer : true}
+          open={this.props.mobile ? this.props.drawer : true}
         >
           <ListContainer />
-        </Drawer>
+        </SwipeableDrawer>
 
-        <DetailContainer onDrawerClick={this.handleDrawerToggle.bind(this)} />
+        <DetailContainer />
       </div>
     );
   }
 }
 
-export default AppContainer;
+const mapStateToProps = state => ({
+  drawer: state.drawer,
+  mobile: state.mobile
+})
+
+const mapDispatchToProps = {
+  openDrawer,
+  closeDrawer,
+  toggleMobile
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppContainer)

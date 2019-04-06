@@ -1,0 +1,20 @@
+.list-appear {
+  opacity: 0.01;
+}
+
+.list-appear.list-appear-active {
+  opacity: 1;
+  transition: all 500ms;
+}
+
+.list-leave {
+  opacity: 1;
+  position: relative;
+  left: 0;
+}
+
+.list-leave.list-leave-active {
+  opacity: 0.01;
+  left: -50px;
+  transition: all 300ms;
+}

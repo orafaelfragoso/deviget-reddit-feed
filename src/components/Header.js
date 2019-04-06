@@ -1,12 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from './stylesheets/Header.module.scss'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import Typography from '@material-ui/core/Typography'
 
 const Header = ({title, showMenu, onMenuClick}) => (
-  <div className={styles.Container}>
-    {(showMenu ? <span className={styles.Left} onClick={onMenuClick}>Menu</span> : null)}
-    <h1 className={styles.Heading}>{title}</h1>
-  </div>
+  <AppBar position="static">
+    <Toolbar variant="dense">
+      {showMenu && (
+        <IconButton color="inherit" aria-label="Menu" onClick={onMenuClick}>
+          <MenuIcon />
+        </IconButton>
+      )}
+      <Typography variant="h6" color="inherit">
+        {title}
+      </Typography>
+    </Toolbar>
+  </AppBar>
 )
 
 Header.propTypes = {

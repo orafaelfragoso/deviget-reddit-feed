@@ -1,0 +1,23 @@
+.Container {
+  width: 100%;
+  maxWidth: 300px;
+  position: relative;
+}
+
+.Unread {
+  &:after {
+    position: absolute;
+    content: '';
+    width: 15px;
+    height: 15px;
+    background-color: #ffe0b2;
+    top: 10px;
+    right: 20px;
+    z-index: 9999;
+    border-radius: 100%;
+  }
+}
+
+.Title {
+  font-weight: 700 !important;
+}
