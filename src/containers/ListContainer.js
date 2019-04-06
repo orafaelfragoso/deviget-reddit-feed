@@ -27,7 +27,23 @@ class ListContainer extends Component {
   }
 
   renderItems(type, item) {
-    return <div className={styles.ListItem}>{item.data.title}</div>
+    return (
+      <div className={styles.ListItem}>
+        <div className={styles.ListItemBody}>
+          <span className={styles.ListItemImage}>
+            <img src={item.data.thumbnail} alt={item.data.title} />
+          </span>
+          <div className={styles.ListItemDetail}>
+            <span className={styles.ListItemTitle}>{item.data.author}</span>
+            <span className={styles.ListItemText}>{item.data.title}</span>
+          </div>
+        </div>
+        <div className={styles.ListItemBottom}>
+          <span className={styles.ListItemDismiss}>Dismiss</span>
+          <span className={styles.ListItemComments}>{item.data.num_comments} comments</span>
+        </div>
+      </div>
+    )
   }
 
   render() {

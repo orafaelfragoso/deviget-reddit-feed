@@ -11,11 +11,100 @@
 }
 
 .List {
-
+  flex: 1;
+  min-width: 300px;
+  min-height: 100%;
 }
 
 .ListItem {
   flex: 1;
-  background-color: #f1f1f1;
-  border-bottom: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #f1f1f1;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f1f1f1;
+  }
+
+  &.ListItemDismiss:hover {
+    background-color: #fff;
+  }
+}
+
+.ListItemBody {
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.ListItemImage {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 100%;
+  display: inline-block;
+
+  img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.ListItemDetail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+
+.ListItemTitle {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.ListItemText {
+  font-size: 12px;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 16px;
+  max-height: 32px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ListItemBottom {
+  font-size: 14px;
+  position: relative;
+  height: 20px;
+}
+
+.ListItemDismiss {
+  position: absolute;
+  height: 20px;
+  top: 0;
+  left: 10px;
+  color: red;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: rgba(255, 0, 0, .8)
+  }
+}
+
+.ListItemComments {
+  position: absolute;
+  height: 20px;
+  top: 0;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: orange;
 }
