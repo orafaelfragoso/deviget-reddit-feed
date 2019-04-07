@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styles from './stylesheets/ListItem.module.scss'
-import MuiListItem from '@material-ui/core/ListItem'
+import './stylesheets/List.scss'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
@@ -19,13 +19,13 @@ class ListItem extends Component {
   }
 
   _handleClick(post) {
-    const { onClick } = this.props
-    return function() {
-      onClick(post)
+    return () => {
+      this.props.onClick(post)
     }
   }
 
-  _handleDismiss() {
+  _handleDismiss(event) {
+    event.stopPropagation()
     this.props.onDismiss(this.props.post.id)
   }
 
@@ -43,7 +43,7 @@ class ListItem extends Component {
     } = this.props.post
 
     return (
-      <MuiListItem key={id} dense button divider onClick={this._handleClick(this.props.post)} className={(this.props.post.read ? null : styles.Unread)}>
+      <div key={id} onClick={this._handleClick(this.props.post)} className={this.props.post.read ? styles.Wrapper : `${styles.Wrapper} ${styles.Unread}`} style={this.props.style}>
         <ListItemAvatar>
           <Avatar alt={description} src={image} />
         </ListItemAvatar>
@@ -71,7 +71,7 @@ class ListItem extends Component {
             <DeleteIcon />
           </IconButton>
         </ListItemSecondaryAction>
-      </MuiListItem>
+      </div>
     )
   }
 

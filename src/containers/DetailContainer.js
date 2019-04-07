@@ -11,7 +11,7 @@ class DetailContainer extends Component {
         <Header title="Details" showMenu={this.props.mobile} onMenuClick={this.props.openDrawer} />
         {this.props.selectedPost && (
           <React.Fragment>
-            <p><img src={this.props.selectedPost.image} /></p>
+            <p><img src={this.props.selectedPost.image} alt={this.props.selectedPost.description} /></p>
             <p>{this.props.selectedPost.title}</p>
             <p>{this.props.selectedPost.description}</p>
           </React.Fragment>

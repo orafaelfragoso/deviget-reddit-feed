@@ -1,77 +1,64 @@
 import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import MaterialList from '@material-ui/core/List'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import throttle from 'lodash/throttle'
 import AnimatedSpinner from '../components/AnimatedSpinner'
 import './stylesheets/List.scss'
-
-const styles = theme => ({
-  root: {
-    flex: 1,
-    width: '100%',
-    maxWidth: 300,
-    overflowY: 'auto',
-    overflowX: 'hidden'
-  }
-})
+import { VariableSizeList } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
+import ListItem from './ListItem'
 
 class List extends Component {
+  _renderItems({index, style}) {
+    const item = this.props.items[index]
 
-  constructor(props) {
-    super(props)
-    this._delayedScroll = throttle(this._handleScroll, 500)
+    return (
+      <ListItem 
+        post={item} 
+        style={style}
+        onDismiss={this.props.onDismissItem} 
+        onClick={() => {
+          this.props.onClickItem(item)
+        }} 
+      />
+    )
   }
 
-  _onScroll = event => {
-    event.persist()
-    this._delayedScroll(event)
+  _isItemLoaded(index) {
+    return !this.props.isLoading && index < this.props.items.length - 1 && this.props.hasMoreItems
   }
 
-  _handleScroll = (e) => {
-    const list = e.target
-    const listItems = list.children[0].children
-    const lastItem = listItems[listItems.length - 1]
-    const { threshold, onReachedThreshold, isLoading, hasMoreItems } = this.props
-
-    if (isLoading || !hasMoreItems) return
-
-    const fireThreshold = list.scrollTop + list.offsetHeight
-    const bottomThreshold = lastItem.offsetTop - threshold - lastItem.offsetHeight
-
-    if (fireThreshold >= bottomThreshold) {
-      onReachedThreshold()
+  async _loadMoreItems() {
+    if (this.props.isLoading) {
+      return function() {}
     }
+
+    await this.props.onReachedThreshold()
   }
 
   render() {
-    const propsClone = {...this.props}
-    delete propsClone.isLoading
-    delete propsClone.hasMoreItems
-    delete propsClone.threshold
-    delete propsClone.onReachedThreshold
-
     return (
       <React.Fragment>
         <AnimatedSpinner show={this.props.isLoading} />
-        <MaterialList 
-          {...propsClone} 
-          onScroll={this._onScroll.bind(this)}
-          style={{position: 'relative'}}
+        <InfiniteLoader 
+          isItemLoaded={this._isItemLoaded.bind(this)}
+          itemCount={this.props.items.length}
+          loadMoreItems={this._loadMoreItems.bind(this)}
         >
-          <ReactCSSTransitionGroup
-            transitionName="list"
-            transitionLeaveTimeout={300}
-            transitionEnter={false}
-            transitionAppear={true}
-            transitionAppearTimeout={300}
-          >
-            {this.props.children}
-          </ReactCSSTransitionGroup>
-        </MaterialList>
+          {({ onItemsRendered, ref }) => (
+            <VariableSizeList
+              className="list"
+              itemCount={this.props.items.length}
+              onItemsRendered={onItemsRendered}
+              ref={ref}
+              width={300}
+              height={window.innerHeight}
+              itemSize={(index) => 100}
+            >
+              {this._renderItems.bind(this)}
+            </VariableSizeList>
+          )}
+        </InfiniteLoader>
       </React.Fragment>
     )
   }
 } 
 
-export default withStyles(styles)(List)
+export default List

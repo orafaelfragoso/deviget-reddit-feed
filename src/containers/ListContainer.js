@@ -4,7 +4,6 @@ import { fetchPosts, deletePost, selectPost, readPost, fetchMorePosts } from '..
 import styles from './stylesheets/ListContainer.module.scss'
 import Header from '../components/Header'
 import List from '../components/List'
-import ListItem from '../components/ListItem'
 
 class ListContainer extends Component {
 
@@ -16,34 +15,21 @@ class ListContainer extends Component {
     this.props.getMorePosts(this.props.page)
   }
 
-  renderItems() {
-    return this.props.posts.map(item => {
-      return (
-        <ListItem
-          post={item}
-          key={item.id}
-          onClick={() => {
-            this.props.selectPost(item)
-            this.props.readPost(item.id)
-          }}
-          onDismiss={this.props.deletePost}
-        />
-      )
-    })
-  }
-
   render() {
     return (
       <div className={styles.Container}>
         <Header title="Reddit Feed" />
         <List 
-          threshold={100}
           onReachedThreshold={this._loadMorePosts.bind(this)}
           isLoading={this.props.loading}
           hasMoreItems={this.props.page !== null}
-        >
-          {this.renderItems()}
-        </List>
+          items={this.props.posts}
+          onClickItem={(item) => {
+            this.props.selectPost(item)
+            this.props.readPost(item.id)
+          }}
+          onDismissItem={this.props.deletePost}
+        />
       </div>
     );
   }

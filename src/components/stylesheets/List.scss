@@ -1,20 +1,15 @@
-.list-appear {
-  opacity: 0.01;
-}
-
-.list-appear.list-appear-active {
-  opacity: 1;
-  transition: all 500ms;
-}
-
-.list-leave {
-  opacity: 1;
+.list {
+  flex: 1;
+  min-height: 100% !important;
+  width: 100%;
   position: relative;
-  left: 0;
 }
 
-.list-leave.list-leave-active {
-  opacity: 0.01;
-  left: -50px;
-  transition: all 300ms;
+.list-appear-active {
+  opacity: 1 !important;
+}
+
+.list-leave-active {
+  opacity: 0.01 !important;
+  left: -50px !important;
 }
