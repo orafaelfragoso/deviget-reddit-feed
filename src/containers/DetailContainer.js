@@ -9,6 +9,13 @@ class DetailContainer extends Component {
     return (
       <div className={styles.Container}>
         <Header title="Details" showMenu={this.props.mobile} onMenuClick={this.props.openDrawer} />
+        {this.props.selectedPost && (
+          <React.Fragment>
+            <p><img src={this.props.selectedPost.image} /></p>
+            <p>{this.props.selectedPost.title}</p>
+            <p>{this.props.selectedPost.description}</p>
+          </React.Fragment>
+        )}
       </div>
     );
   }
@@ -16,7 +23,8 @@ class DetailContainer extends Component {
 
 const mapStateToProps = state => ({
   drawer: state.drawer,
-  mobile: state.mobile
+  mobile: state.mobile,
+  selectedPost: state.selectedPost
 })
 
 const mapDispatchToProps = {

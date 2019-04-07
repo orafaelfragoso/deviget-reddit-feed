@@ -5,7 +5,7 @@ export default class Reddit {
     this.options = options
   }
 
-  get(nextPage) {
+  get(nextPage = null) {
     let url = `https://www.reddit.com/r/all/top.json?limit=${this.options.limit}`
 
     if (nextPage !== null) {
@@ -14,7 +14,7 @@ export default class Reddit {
 
     return fetch(url)
             .then(response => response.json())
-            .then(res => res.data.children)
+            .then(res => res.data)
   }
 
   getPost(id, type) {

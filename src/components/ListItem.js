@@ -18,12 +18,15 @@ class ListItem extends Component {
     this._handleDismiss = this._handleDismiss.bind(this)
   }
 
-  _handleClick(e) {
-    
+  _handleClick(post) {
+    const { onClick } = this.props
+    return function() {
+      onClick(post)
+    }
   }
 
   _handleDismiss() {
-    this.props.onDismiss(this.props.id)
+    this.props.onDismiss(this.props.post.id)
   }
 
   _limitCharacters(text) {
@@ -32,15 +35,15 @@ class ListItem extends Component {
 
   render() {
     const {
-      image,
       title,
       description,
+      image,
       comments,
       id
-    } = this.props
+    } = this.props.post
 
     return (
-      <MuiListItem key={id} dense button divider onClick={this._handleClick} className={styles.Unread}>
+      <MuiListItem key={id} dense button divider onClick={this._handleClick(this.props.post)} className={(this.props.post.read ? null : styles.Unread)}>
         <ListItemAvatar>
           <Avatar alt={description} src={image} />
         </ListItemAvatar>

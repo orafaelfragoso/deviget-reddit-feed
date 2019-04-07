@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchPosts, deletePost } from '../actions/posts.actions'
+import { fetchPosts, deletePost, selectPost, readPost, fetchMorePosts } from '../actions/posts.actions'
 import styles from './stylesheets/ListContainer.module.scss'
 import Header from '../components/Header'
 import List from '../components/List'
@@ -12,19 +12,20 @@ class ListContainer extends Component {
     this.props.getPosts(true)
   }
 
+  _loadMorePosts() {
+    this.props.getMorePosts(this.props.page)
+  }
+
   renderItems() {
     return this.props.posts.map(item => {
       return (
         <ListItem
-          image={item.data.thumbnail}
-          title={item.data.author}
-          description={item.data.title}
-          comments={item.data.num_comments}
-          id={item.data.id}
-          key={item.data.id}
-          delayTime={200}
-          isMounted={true}
-          onClick={() => {}}
+          post={item}
+          key={item.id}
+          onClick={() => {
+            this.props.selectPost(item)
+            this.props.readPost(item.id)
+          }}
           onDismiss={this.props.deletePost}
         />
       )
@@ -35,7 +36,12 @@ class ListContainer extends Component {
     return (
       <div className={styles.Container}>
         <Header title="Reddit Feed" />
-        <List>
+        <List 
+          threshold={100}
+          onReachedThreshold={this._loadMorePosts.bind(this)}
+          isLoading={this.props.loading}
+          hasMoreItems={this.props.page !== null}
+        >
           {this.renderItems()}
         </List>
       </div>
@@ -44,12 +50,17 @@ class ListContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  posts: state.posts
+  posts: state.posts,
+  loading: state.loader,
+  page: state.page
 })
 
 const mapDispatchToProps = {
   getPosts: fetchPosts,
-  deletePost: deletePost
+  deletePost,
+  selectPost,
+  readPost,
+  getMorePosts: fetchMorePosts
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListContainer)
