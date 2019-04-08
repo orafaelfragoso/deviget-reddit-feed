@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchPosts, deletePost, selectPost, readPost, fetchMorePosts } from '../actions/posts.actions'
+import { 
+  fetchPosts, 
+  deletePost, 
+  selectPost, 
+  readPost, 
+  fetchMorePosts,
+  deleteAllPosts,
+  refreshPosts
+} from '../actions/posts.actions'
 import styles from './stylesheets/ListContainer.module.scss'
 import Header from '../components/Header'
 import List from '../components/List'
@@ -35,7 +43,13 @@ class ListContainer extends Component {
   render() {
     return (
       <div className={styles.Container}>
-        <Header title="Reddit Feed" />
+        <Header 
+          title="Reddit Feed" 
+          showRefresh={true} 
+          showDelete={true}
+          onRefreshClick={this.props.refreshPosts}
+          onDeleteClick={this.props.deleteAllPosts}
+        />
         <List 
           threshold={100}
           onReachedThreshold={this._loadMorePosts.bind(this)}
@@ -57,10 +71,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getPosts: fetchPosts,
+  getMorePosts: fetchMorePosts,
+  refreshPosts,
   deletePost,
+  deleteAllPosts,
   selectPost,
-  readPost,
-  getMorePosts: fetchMorePosts
+  readPost
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListContainer)

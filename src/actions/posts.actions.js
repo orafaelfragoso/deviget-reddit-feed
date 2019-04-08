@@ -8,9 +8,11 @@ export const REQUEST_POSTS = 'request_posts'
 export const RECEIVED_POSTS = 'received_posts'
 export const RECEIVED_INITIAL_BATCH = 'received_initial_batch'
 export const DELETE_POST = 'delete_post'
+export const DELETE_ALL_POSTS = 'delete_all_posts'
 export const LOAD_POST = 'load_post'
 export const SAVE_NEXT_PAGE = 'save_next_page'
 export const READ_POST = 'read_post'
+export const REFRESHED_POSTS = 'refreshed_post'
 
 export const requestPosts = () => ({
   type: REQUEST_POSTS
@@ -18,6 +20,11 @@ export const requestPosts = () => ({
 
 export const receivedPosts = (data) => ({
   type: RECEIVED_POSTS,
+  payload: data
+})
+
+export const refreshedPosts = (data) => ({
+  type: REFRESHED_POSTS,
   payload: data
 })
 
@@ -29,6 +36,10 @@ export const receivedInitialBatch = (data) => ({
 export const removePost = (id) => ({
   type: DELETE_POST,
   payload: id
+})
+
+export const removeAllPosts = () => ({
+  type: DELETE_ALL_POSTS
 })
 
 export const readPost = (id) => ({
@@ -101,8 +112,28 @@ export function fetchMorePosts(page) {
   }
 }
 
+export function refreshPosts() {
+  return function (dispatch) {
+    dispatch(toggleLoader(true))
+    dispatch(requestPosts())
+
+    return api.get()
+      .then((json) => {
+        dispatch(saveNextPage(json.after))
+        dispatch(refreshedPosts(sanitizePosts(json.children)))
+        dispatch(toggleLoader(false))
+      })
+  }
+}
+
 export function deletePost(id) {
   return function (dispatch) {
     dispatch(removePost(id))
+  }
+}
+
+export function deleteAllPosts() {
+  return function (dispatch) {
+    dispatch(removeAllPosts())
   }
 }
