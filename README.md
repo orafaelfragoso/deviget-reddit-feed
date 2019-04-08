@@ -1,68 +1,101 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Deviget Reddit Feed
+> Review it with love ❤️
 
-## Available Scripts
+## Summary
 
-In the project directory, you can run:
+- [The Exercise](#the-exercise)
+- [Running the Project](#running-the-project)
+- [Problems Faced](#problems-faced)
+- - [React List](#react-list)
+- - [Reddit API](#reddit-api)
+- - [AWS Account](#aws-account)
+- - [Availability](#availability)
+- [Possible Solutions](#possible-solutions)
+- [What is Missing](#what_is_missing)
 
-### `npm start`
+## The Exercise
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+We would like to have you complete the following code test so we can evaluate your Front-end skills. Please place your code in a public Github repository and commit each step of your process so we can review it.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Your assignment is to create a simple Reddit client that shows the top 50 entries from Reddit - [www.reddit.com/top](www.reddit.com/top)
 
-### `npm test`
+To do this please follow these guidelines and use the front-end technology we talked about during your interview (Specific Javascript Framework):
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The app should be able to show data from each entry such as:
 
-### `npm run build`
+- [x] Title (at its full length, so take this into account when sizing your cells)
+- [x] Author
+- [x] entry date, following a format like “x hours ago”
+- [x] A thumbnail for those who have a picture.
+- [x] Number of comments
+- [x] Unread status
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In addition, for those having a picture (besides the thumbnail), please allow the user to tap on the thumbnail to be sent to the full sized picture.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Running the Project
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Running locally with Yarn:
 
-### `npm run eject`
+```
+yarn
+yarn start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Running with Docker:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+docker build . -t rafaelfragosom/deviget-reddit-feed
+docker run -d -p 5000:5000 -e PORT=5000 rafaelfragosom/deviget-reddit-feed
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+**[Or go to Heroku to see it live](https://deviget-reddit-feed.herokuapp.com/)**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Problems Faced
+> To give a little bit of context, let me explain the problems I faced during the development of the test.
 
-## Learn More
+### React List
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+I ended up using the regular List component from [@material-ui](https://material-ui.com/) because it played well with the animations. Because of that, I lost a lot of performance because of the huge list size and it's contents.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+I did implemented a virtualized list using [react-window](https://github.com/bvaughn/react-window/) and [react-window-infinite-loader](https://www.npmjs.com/package/react-window-infinite-loader), which seems super super fast and responsive as it should. Go to the [virtualized-list branch](https://github.com/rafaelfragosom/deviget-reddit-feed/tree/virtualized-list) to see more.
 
-### Code Splitting
+I didn't kept the virtualized list version because the way the lib was implemented, it was not playing well with the animations. The library expects a function to be passed as children, not a component, so I couldn't use the [React Transition Group](https://reactcommunity.org/react-transition-group/) as intended. If I had more time, I would extend it's render method to implement the animations.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+### Reddit API
 
-### Analyzing the Bundle Size
+The Reddit API is amazing in theory, but it's results are really confusing. I wasn't able to find a way to identify the post types (gif, text, image, video... etc.), so I did my best to identify and sanitize then, but I'm not 100% confident of the results.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+I chose to write my own Reddit service instead of using a library for make requests, since I only needed one request. I compared the results from the list request and detail request and they were pretty much the same, so I only did one request and passed the data to the detail view with redux.
 
-### Making a Progressive Web App
+Pagination was not a problem.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+### AWS Account
 
-### Advanced Configuration
+This is not a project related thing, but since I would be using AWS on Deviget, it's important to mention that my AWS account was having technical issues, I'm still waiting on support to fix it. That's why I chose Heroku to host the app.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+Now Heroku supports Docker images, so the deploy is not so different from AWS. And it's free.
 
-### Deployment
+### Availability
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+One really important factor to this test was that I barely had time to focus during this weekend. I was taking care of my daughter the whole time and using the bed time to code most of the time. I'm very sleep depraved right now.
 
-### `npm run build` fails to minify
+## Possible Solutions
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+As mentioned, I would solve the List problem with a virtualized list, extending the lib's render method to accept a component, so I can use the React Transition Group. Something like what Twitter did with their lite app.
+
+I would also try to use the [snoowrap](https://github.com/not-an-aardvark/snoowrap) library to access the Reddit API and sanitize the results. The library seems promising, there's even a thread on Reddit itself.
+
+Regarding the state persistence, I used localStorage to save the state inside the browser. Since I did it by hand, I missed a few things like **reconciliation** and **storage size**. Every browser have it's own localStorage limitations and I am not accounting for that. The probable solution is to implement a middleware on Redux or use a lib already written to solve those problems.
+
+The app is not really reliable because it depends directly from an external source, so I would write a microservice to cache the Reddit API and use that instead. That way, even if Reddit is down, I could send the cached posts from the microservice and the app will always work. With that in mind, I would also handle the internet connectivity issues to give a more PWA experience and also let the user know that he is pulling cached information from the microservice if the Reddit API is down.
+
+## What is Missing
+
+- **Tests**: It's really important to test this application, specially because it depends on external sources and it could face unavailability and connection issues.
+- **CI/CD**: To run the tests and automaticaly deploy the application.
+- **Error Report**: An error report tool like [Sentry](https://sentry.io/for/javascript/) to catch the errors on the fly.
+- **Caching Strategies**: Service Workers and Nginx tweaks to cache the application for faster server responses and offline experience (since I'm storing everything).
+
+-------------------
+
+Please, consider me 🙏
