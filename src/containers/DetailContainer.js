@@ -14,7 +14,21 @@ class DetailContainer extends Component {
         <Header title="Details" showMenu={mobile} onMenuClick={openDrawer} />
         {selectedPost && (
           <Paper className={styles.Content}>
-            <p><img src={selectedPost.image} alt={selectedPost.description} className={styles.Image} /></p>
+            {selectedPost.type === 'video' && (
+              <video width={selectedPost.media.width} height={selectedPost.media.height} controls>
+                <source src={selectedPost.media.url} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
+            {selectedPost.type === 'gif' && (
+              <p dangerouslySetInnerHTML={selectedPost.media.html} />
+            )}
+            {selectedPost.type === 'gifv' && (
+              <p><video autoPlay loop muted playsInline src={selectedPost.media.url} /></p>
+            )}
+            {selectedPost.type === 'image' && (
+              <p><img src={selectedPost.media.url} alt={selectedPost.description} className={styles.Image} /></p>
+            )}
             <p className={styles.Title}>{selectedPost.title}</p>
             <p className={styles.Description}>{selectedPost.description}</p>
           </Paper>

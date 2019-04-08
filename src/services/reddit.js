@@ -7,7 +7,7 @@ export default class Reddit {
   }
 
   get(nextPage = null) {
-    let url = `${config.apiUrl}r/all/top.json?limit=${this.options.limit}`
+    let url = `${config.apiUrl}r/popular.json?limit=${this.options.limit}`
 
     if (nextPage !== null) {
       url += `&after=${nextPage}&count=${this.options.limit}`

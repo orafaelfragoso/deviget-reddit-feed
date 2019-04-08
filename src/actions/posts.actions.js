@@ -59,16 +59,46 @@ export const saveNextPage = (page) => ({
 
 function sanitizePosts(posts) {
   if (posts.length > 0) {
-    return posts.map(item => ({
-      image: item.data.thumbnail,
-      title: item.data.author,
-      description: item.data.title,
-      comments: item.data.num_comments,
-      createdAt: item.data.created,
-      id: item.data.id,
-      upvotes: item.data.ups,
-      read: false
-    }))
+    return posts.map(item => {
+      let post = {
+        image: item.data.thumbnail,
+        title: item.data.author,
+        description: item.data.title,
+        comments: item.data.num_comments,
+        createdAt: item.data.created,
+        id: item.data.id,
+        upvotes: item.data.ups,
+        type: 'self',
+        read: false
+      }
+
+      if (item.data.is_video && !!item.data.media && item.data.media.hasOwnProperty('reddit_video')) {
+        post.type = 'video'
+        post.media = {
+          url: item.data.media.reddit_video.fallback_url,
+          width: item.data.media.reddit_video.width,
+          height: item.data.media.reddit_video.height
+        }
+      } else if (!item.data.is_video && !!item.data.media && item.data.media.type === 'gfycat.com') {
+        post.type = 'gif'
+        post.media = {
+          html: item.data.media.oembed.html
+        }
+      } else if (!item.data.is_video && !item.data.media && item.data.url.lastIndexOf('.gifv') > 0) {
+        post.type = 'gifv'
+        post.media = {
+          url: item.data.url.replace('gifv', 'mp4')
+        }
+      } else if (!item.data.is_video && !item.data.media && (item.data.url.lastIndexOf('.jpg') > 0 || item.data.url.lastIndexOf('.jpeg') > 0 || item.data.url.lastIndexOf('.png') > 0)) {
+        post.type = 'image'
+        post.media = {
+          url: item.data.url
+        }
+      }
+
+
+      return post
+    })
   }
 
   return []
