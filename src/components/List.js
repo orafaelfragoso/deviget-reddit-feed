@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import MaterialList from '@material-ui/core/List'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -73,5 +74,17 @@ class List extends Component {
     )
   }
 } 
+
+List.propTypes = {
+  threshold: PropTypes.number,
+  onReachedThreshold: PropTypes.func,
+  isLoading: PropTypes.bool.isRequired,
+  hasMoreItems: PropTypes.bool.isRequired
+}
+
+List.defaultProps = {
+  onReachedThreshold: () => {},
+  threshold: 100
+}
 
 export default withStyles(styles)(List)

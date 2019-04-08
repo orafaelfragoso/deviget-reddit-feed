@@ -1,6 +1,8 @@
+import config from '../config.json'
+
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem('state')
+    const serializedState = localStorage.getItem(config.storageKey)
 
     if (serializedState === null) {
       return undefined
@@ -15,7 +17,7 @@ export const loadState = () => {
 export const saveState = (state) => {
   try {
     const serializedState = JSON.stringify(state)
-    localStorage.setItem('state', serializedState)
+    localStorage.setItem(config.storageKey, serializedState)
   } catch (err) {
     // maybe throw this to a crash app report server?
   }

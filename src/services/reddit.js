@@ -1,12 +1,13 @@
 import fetch from 'node-fetch'
+import config from '../config.json'
 
 export default class Reddit {
-  constructor(options = {limit: 50}) {
+  constructor(options = {limit: config.perPage}) {
     this.options = options
   }
 
   get(nextPage = null) {
-    let url = `https://www.reddit.com/r/all/top.json?limit=${this.options.limit}`
+    let url = `${config.apiUrl}r/all/top.json?limit=${this.options.limit}`
 
     if (nextPage !== null) {
       url += `&after=${nextPage}&count=${this.options.limit}`
@@ -18,7 +19,7 @@ export default class Reddit {
   }
 
   getPost(id, type) {
-    return fetch(`https://www.reddit.com/api/info.json?id=${type}_${id}`)
+    return fetch(`${config.apiUrl}api/info.json?id=${type}_${id}`)
             .then(response => response.json())
             .then(res => res.data.children)
   }

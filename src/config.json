@@ -1,0 +1,5 @@
+{
+  "apiUrl": "https://www.reddit.com/",
+  "perPage": 50,
+  "storageKey": "state"
+}

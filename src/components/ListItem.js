@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 import styles from './stylesheets/ListItem.module.scss'
 import MuiListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -10,7 +11,7 @@ import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 
 
-class ListItem extends Component {
+class ListItem extends PureComponent {
   
   constructor(props) {
     super(props)
@@ -75,6 +76,17 @@ class ListItem extends Component {
     )
   }
 
+}
+
+ListItem.propTypes = {
+  post: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
+  onDismiss: PropTypes.func
+}
+
+ListItem.defaultProps = {
+  onClick: () => {},
+  onDismiss: () => {}
 }
 
 export default ListItem
