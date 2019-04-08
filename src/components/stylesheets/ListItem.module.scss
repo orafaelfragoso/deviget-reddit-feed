@@ -8,11 +8,11 @@
   &:after {
     position: absolute;
     content: '';
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 10px;
     background-color: #ffe0b2;
-    top: 10px;
-    right: 20px;
+    top: 5px;
+    right: 5px;
     z-index: 9999;
     border-radius: 100%;
   }
@@ -20,4 +20,13 @@
 
 .Title {
   font-weight: 700 !important;
+}
+
+.Info {
+  display: flex;
+  justify-content: space-between;
+
+  span {
+    font-size: 11px;
+  }
 }

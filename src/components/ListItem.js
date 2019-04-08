@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
+import timeAgo from '../utils/timeAgo'
 
 
 class ListItem extends PureComponent {
@@ -40,7 +41,8 @@ class ListItem extends PureComponent {
       description,
       image,
       comments,
-      id
+      id,
+      createdAt
     } = this.props.post
 
     return (
@@ -61,9 +63,14 @@ class ListItem extends PureComponent {
               <Typography component="span" variant="body2">
                 {this._limitCharacters(description)}
               </Typography>
-              <Typography component="span" variant="caption" color="primary">
-                {comments} comments
-              </Typography>
+              <span className={styles.Info}>
+                <Typography component="span" variant="caption" color="primary">
+                  {comments} comments
+                </Typography>
+                <Typography component="span" variant="caption" color="primary">
+                  {timeAgo(new Date(createdAt * 1000))}
+                </Typography>
+              </span>
             </React.Fragment>
           }
         />
